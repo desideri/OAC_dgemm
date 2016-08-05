@@ -105,15 +105,13 @@ void dgemm(){
  * SEGUNDA OPCION CON gettimeofday en MICROSEGUNDOS
  */
 
-
+/*
 #include <sys/time.h>
 void crear_aleatorios();
 void dgemm();
 double timeval_diff(struct timeval *a, struct timeval *b);
 
 
-/*void dgemm(double A[][], double B[][], double C[][]);
-*/
 int max = 62;//numero de elementos de lsa matrix
 double B[32][32], C[32][32];
 double A[32][32];
@@ -197,16 +195,118 @@ void dgemm(){
 }
 
 
-/* retorna "a - b" en segundos */
+// retorna "a - b" en segundos 
 double timeval_diff(struct timeval *a, struct timeval *b)
 {
   return
     (double)(a->tv_sec + (double)a->tv_usec/1000000) -
     (double)(b->tv_sec + (double)b->tv_usec/1000000);
 }
+*/
+
+/*
+ * TERCERA OPCION CON gettimeofday en MICROSEGUNDOS
+ */
+
+/*
+#include <sys/time.h>
+void crear_aleatorios();
+void dgemm();
 
 
+int max = 62;//numero de elementos de lsa matrix
+double B[32][32], C[32][32];
+double A[32][32];
+LARGE_INTEGER t_ini, t_fin;
+ double secs;
+
+int main(int argc, char** argv) {
+    printf("********************\n");
+    printf("**ALGORITMO DGEMM***\n\n");
+	crear_aleatorios();
+	
+	QueryPerformanceCounter(&t_ini);//tiempo inicio
+	dgemm();
+	QueryPerformanceCounter(&t_fin); //tiempo fin de clock
+    
+    int i,j;
+   printf("********  C RESULTADO  *********\n");
+    for(i=0;i!=32;i=i+1){
+             for(j=0;j!=32;j=j+1){ 
+            
+                 printf("%g\t",C[i][j]);
+                }
+            printf("\n");
+           }
+			
+	printf("\n");
+	secs = performancecounter_diff(&t_fin, &t_ini);
+  	printf("%.16g milliseconds\n", secs * 1000.0);
+
+ 
+	getch();
+    return (EXIT_SUCCESS);
+}
+
+void crear_aleatorios(){
+     int numero= 9;
+     int num;
+     int i,j;
+
+    srand(time(NULL));
+    printf("********  A  *********\n");
+    for(i=0;i!=32;i=i+1){
+     for(j=0;j!=32;j=j+1){ 
+         num = rand()%10; 
+         A[i][j]=num; 
+        // printf("%d",A[i][j]);
+         printf("%g",A[i][j]);
+        }
+    printf("\n");
+    }
+     printf("********  B  *********\n");
+    for(i=0;i!=32;i=i+1){
+         for(j=0;j!=32;j=j+1){ 
+             num = rand()%10; 
+             B[i][j]=num; 
+            // printf("%d",A[i][j]);
+             printf("%g",B[i][j]);
+            }
+        printf("\n");
+       }
+    printf("********  C  *********\n");
+    for(i=0;i!=32;i=i+1){
+            for(j=0;j!=32;j=j+1){ 
+                num = rand()%10; 
+                C[i][j]=num; 
+               // printf("%d",A[i][j]);
+                printf("%g",C[i][j]);
+               }
+           printf("\n");
+          }
+    }
+
+void dgemm(){
+	//t_ini = clock();//tiempo inicio
+    int i, j,k;
+        for(i=0;i!=32;i=i+1){
+        for(j=0;j!=32;j=j+1){
+        for(k=0;k!=32;k=k+1){
+          C[i][j]=C[i][j]+A[i][k]*B[k][j];
+        }}}
+
+}
 
 
+// retorna "a - b" en segundos 
+double performancecounter_diff(LARGE_INTEGER *a, LARGE_INTEGER *b)
+{
+  LARGE_INTEGER freq;
+  QueryPerformanceFrequency(&freq);
+  return (double)(a->QuadPart - b->QuadPart) / (double)freq.QuadPart;
+}
+
+
+*/
 
 
